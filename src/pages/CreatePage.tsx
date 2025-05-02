@@ -1,92 +1,94 @@
 
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Brush, Music, Book, Image } from "lucide-react";
+import { Brush, Music, Book, Sparkles } from "lucide-react";
 import Header from "@/components/Header";
 import Navigation from "@/components/Navigation";
-import FeatureCard from "@/components/FeatureCard";
 
-const CreatePage = () => {
-  const creativeTools = [
-    {
-      id: "ai-drawing",
-      title: "AI绘画",
-      description: "使用AI创造传统风格的绘画作品",
-      icon: <Brush size={32} className="text-white" />,
-      color: "#D64541",
-      to: "/create/drawing"
-    },
-    {
-      id: "ai-music",
-      title: "音乐生成",
-      description: "创作融合传统元素的音乐旋律",
-      icon: <Music size={32} className="text-white" />,
-      color: "#3A8FB7",
-      to: "/create/music"
-    },
-    {
-      id: "ai-story",
-      title: "故事创作",
-      description: "与AI一起编写富有传统文化元素的故事",
-      icon: <Book size={32} className="text-white" />,
-      color: "#E6C670",
-      to: "/create/story"
-    }
-  ];
-  
-  // Mock creative examples
-  const examples = [
-    { id: 1, title: "创作示例1", imageUrl: "/placeholder.svg" },
-    { id: 2, title: "创作示例2", imageUrl: "/placeholder.svg" },
-    { id: 3, title: "创作示例3", imageUrl: "/placeholder.svg" },
-    { id: 4, title: "创作示例4", imageUrl: "/placeholder.svg" }
-  ];
-  
+const CreatePage = () => {  
   return (
-    <div className="pb-16 min-h-screen paper-bg">
-      <Header 
-        title="创意工坊" 
-        subtitle="用AI激发你的传统文化创意" 
-        gradient={true} 
-        showBack={false}
-      />
+    <div className="pb-20 min-h-screen bg-heritage-cream">
+      {/* Header with gradient background */}
+      <div className="bg-gradient-to-r from-teal-500 to-emerald-600 text-white p-6 text-center">
+        <h1 className="text-2xl font-bold">创意工坊</h1>
+        <p className="text-sm mt-1">用AI激发传统文化的创意灵感</p>
+      </div>
       
-      <main className="px-4 py-4">
-        <div className="mb-4 flex justify-between items-center">
-          <h2 className="text-xl font-semibold chinese-title">创意工具</h2>
-          <Link to="/gallery" className="text-sm text-heritage-red">我的作品</Link>
-        </div>
-        
-        <div className="grid grid-cols-1 gap-4">
-          {creativeTools.map((tool) => (
-            <FeatureCard
-              key={tool.id}
-              title={tool.title}
-              description={tool.description}
-              icon={tool.icon}
-              to={tool.to}
-              color={tool.color}
-            />
-          ))}
-        </div>
-        
-        <div className="mt-8">
-          <h2 className="text-xl font-semibold chinese-title mb-4">创作灵感</h2>
+      <div className="mx-auto max-w-lg px-4 py-6">
+        {/* Creative Tools */}
+        <div className="grid grid-cols-1 gap-4 mb-8">
+          <Link to="/create/drawing" className="bg-white p-5 rounded-lg shadow-sm flex items-center gap-4">
+            <div className="w-14 h-14 rounded-lg bg-heritage-red flex items-center justify-center">
+              <Brush className="text-white" size={30} />
+            </div>
+            <div>
+              <h3 className="text-lg font-medium">AI智能绘画</h3>
+              <p className="text-sm text-gray-500">使用AI创作传统风格绘画作品</p>
+            </div>
+          </Link>
           
+          <Link to="/create/music" className="bg-white p-5 rounded-lg shadow-sm flex items-center gap-4">
+            <div className="w-14 h-14 rounded-lg bg-heritage-teal flex items-center justify-center">
+              <Music className="text-white" size={30} />
+            </div>
+            <div>
+              <h3 className="text-lg font-medium">音乐生成</h3>
+              <p className="text-sm text-gray-500">创作带有传统元素的旋律作品</p>
+            </div>
+          </Link>
+          
+          <Link to="/create/story" className="bg-white p-5 rounded-lg shadow-sm flex items-center gap-4">
+            <div className="w-14 h-14 rounded-lg bg-heritage-gold flex items-center justify-center">
+              <Book className="text-white" size={30} />
+            </div>
+            <div>
+              <h3 className="text-lg font-medium">故事创作</h3>
+              <p className="text-sm text-gray-500">AI与你共创富含文化元素的故事</p>
+            </div>
+          </Link>
+        </div>
+        
+        {/* Feature Box */}
+        <div className="bg-white p-5 rounded-lg shadow-sm mb-8">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="text-heritage-gold">
+              <Sparkles size={24} />
+            </div>
+            <h3 className="text-lg font-medium">故事创作工具升级</h3>
+          </div>
+          <p className="text-sm text-gray-600 mb-4">成为上古英雄的继承者，体验历史的重要性和精彩故事，AI为你创作奇妙的文字作品。</p>
+        </div>
+
+        {/* Creation Gallery */}
+        <div className="mb-6">
+          <h2 className="text-xl font-bold mb-4">创作灵感</h2>
           <div className="grid grid-cols-2 gap-3">
-            {examples.map((example) => (
-              <div key={example.id} className="bg-white rounded-xl overflow-hidden shadow-sm border border-heritage-gold/30">
-                <div className="aspect-square bg-gray-100 flex items-center justify-center">
-                  <Image size={32} className="text-gray-400" />
-                </div>
-                <div className="p-2">
-                  <h3 className="text-sm font-medium">{example.title}</h3>
-                </div>
+            <div className="bg-white rounded-lg overflow-hidden shadow-sm">
+              <div className="h-32 bg-gray-100"></div>
+              <div className="p-2">
+                <h3 className="font-medium">创作示例1</h3>
               </div>
-            ))}
+            </div>
+            <div className="bg-white rounded-lg overflow-hidden shadow-sm">
+              <div className="h-32 bg-gray-100"></div>
+              <div className="p-2">
+                <h3 className="font-medium">创作示例2</h3>
+              </div>
+            </div>
+            <div className="bg-white rounded-lg overflow-hidden shadow-sm">
+              <div className="h-32 bg-gray-100"></div>
+              <div className="p-2">
+                <h3 className="font-medium">创作示例3</h3>
+              </div>
+            </div>
+            <div className="bg-white rounded-lg overflow-hidden shadow-sm">
+              <div className="h-32 bg-gray-100"></div>
+              <div className="p-2">
+                <h3 className="font-medium">创作示例4</h3>
+              </div>
+            </div>
           </div>
         </div>
-      </main>
+      </div>
       
       <Navigation />
     </div>

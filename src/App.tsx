@@ -9,7 +9,9 @@ import ChatPage from "./pages/ChatPage";
 import GuidePage from "./pages/GuidePage";
 import CreatePage from "./pages/CreatePage";
 import ProfilePage from "./pages/ProfilePage";
+import HeritageDetailPage from "./pages/HeritageDetailPage";
 import StoryCreationPage from "./pages/StoryCreationPage";
+import AIDrawingPage from "./pages/AIDrawingPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,8 +26,10 @@ const App = () => (
           <Route path="/" element={<HomePage />} />
           <Route path="/chat" element={<ChatPage />} />
           <Route path="/guide" element={<GuidePage />} />
+          <Route path="/guide/:id" element={<HeritageDetailPage />} />
           <Route path="/create" element={<CreatePage />} />
           <Route path="/create/story" element={<StoryCreationPage />} />
+          <Route path="/create/drawing" element={<AIDrawingPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
