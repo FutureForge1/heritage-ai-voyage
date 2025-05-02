@@ -8,7 +8,6 @@ interface HeaderProps {
   showBack?: boolean;
   showNotification?: boolean;
   gradient?: boolean;
-  simplified?: boolean; // New prop for simplified header
 }
 
 const Header = ({ 
@@ -16,8 +15,7 @@ const Header = ({
   subtitle,
   showBack = false,
   showNotification = true,
-  gradient = false,
-  simplified = false // Default to false for backward compatibility
+  gradient = false
 }: HeaderProps) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -28,36 +26,6 @@ const Header = ({
     navigate(-1);
   };
 
-  // Simplified header for the home page
-  if (simplified && isHome) {
-    return (
-      <header className="p-4 bg-heritage-paper">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <div className="w-12 h-12 rounded-full bg-heritage-red flex items-center justify-center text-white text-xl font-bold">
-              #
-            </div>
-          </div>
-          
-          <h1 className="chinese-title text-xl text-heritage-red">非遗AI探秘</h1>
-          
-          <div className="flex items-center gap-3">
-            <div className="relative">
-              <Bell size={24} className="text-heritage-red" />
-              <span className="absolute top-0 right-0 w-4 h-4 bg-heritage-red text-white text-xs flex items-center justify-center rounded-full">
-                2
-              </span>
-            </div>
-            <div className="w-9 h-9 rounded-full bg-white shadow-sm border border-heritage-gold/20 flex items-center justify-center">
-              <User size={18} className="text-heritage-red/80" />
-            </div>
-          </div>
-        </div>
-      </header>
-    );
-  }
-
-  // Original header for other pages
   return (
     <header className={`p-4 relative ${gradient ? 'heritage-gradient text-white' : 'bg-heritage-paper'}`}>
       <div className="flex items-center justify-between">
