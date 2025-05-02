@@ -1,8 +1,7 @@
-
 import Header from "@/components/Header";
 import Navigation from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-react";
+import { Book, ChevronRight } from "lucide-react";
 
 const ProfilePage = () => {
   const isLoggedIn = false;

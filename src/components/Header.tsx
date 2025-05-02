@@ -1,5 +1,5 @@
 
-import { ArrowLeft, Bell } from "lucide-react";
+import { ArrowLeft, Bell, User } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 interface HeaderProps {

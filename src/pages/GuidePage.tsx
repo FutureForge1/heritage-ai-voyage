@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { Search } from "lucide-react";
 import Header from "@/components/Header";
 import Navigation from "@/components/Navigation";
 import CategoryFilter from "@/components/CategoryFilter";
