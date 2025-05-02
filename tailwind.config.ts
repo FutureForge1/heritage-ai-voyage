@@ -70,8 +70,17 @@ export default {
 					'gold': '#E6C670',
 					'teal': '#3A8FB7',
 					'paper': '#F8F4E9',
-					'text': '#333333'
+					'text': '#333333',
+					'brown': '#8B4513',
+					'jade': '#00A86B',
+					'ink': '#1C1C1C'
 				}
+			},
+			fontFamily: {
+				'song': ['STSong', 'SimSun', 'serif'],
+				'kai': ['STKaiti', 'KaiTi', 'serif'],
+				'hei': ['STHeiti', 'SimHei', 'sans-serif'],
+				'fangsong': ['STFangsong', 'FangSong', 'serif']
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -94,15 +103,38 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'fade-in': {
+					'0%': {
+						opacity: '0',
+						transform: 'translateY(10px)'
+					},
+					'100%': {
+						opacity: '1',
+						transform: 'translateY(0)'
+					}
+				},
+				'scale-in': {
+					'0%': {
+						transform: 'scale(0.95)',
+						opacity: '0'
+					},
+					'100%': {
+						transform: 'scale(1)',
+						opacity: '1'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fade-in': 'fade-in 0.3s ease-out',
+				'scale-in': 'scale-in 0.2s ease-out'
 			},
 			backgroundImage: {
 				'heritage-gradient': 'linear-gradient(90deg, #D64541 0%, #3A8FB7 100%)',
-				'paper-texture': "url('/public/lovable-uploads/4d016a35-3c97-49c4-bf42-4d6135d58998.png')"
+				'paper-texture': "url('/lovable-uploads/4d016a35-3c97-49c4-bf42-4d6135d58998.png')",
+				'ink-wash': "linear-gradient(to bottom, rgba(248,244,233,0.8), rgba(248,244,233,0.9)), url('/lovable-uploads/4d016a35-3c97-49c4-bf42-4d6135d58998.png')"
 			}
 		}
 	},

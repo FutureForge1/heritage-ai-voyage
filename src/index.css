@@ -79,7 +79,7 @@
 
   /* Custom Chinese-style title class */
   .chinese-title {
-    @apply font-semibold text-heritage-red;
+    @apply font-song text-heritage-red;
     letter-spacing: 0.05em;
   }
   
@@ -98,4 +98,98 @@
   .gold-gradient {
     background: linear-gradient(180deg, #E6C670 0%, #D6A520 100%);
   }
+  
+  /* Ancient style components */
+  .ancient-scroll {
+    border-radius: 8px;
+    box-shadow: 
+      0 4px 12px rgba(0, 0, 0, 0.05),
+      inset 0 0 0 1px rgba(230, 198, 112, 0.2);
+    @apply bg-heritage-paper;
+    position: relative;
+  }
+  
+  .ancient-scroll::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: linear-gradient(180deg, rgba(230, 198, 112, 0.3) 0%, transparent 100%);
+    border-radius: 8px 8px 0 0;
+  }
+  
+  .ancient-scroll::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: linear-gradient(0deg, rgba(230, 198, 112, 0.3) 0%, transparent 100%);
+    border-radius: 0 0 8px 8px;
+  }
+  
+  .ink-brush {
+    position: relative;
+    @apply text-heritage-ink font-kai;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.05);
+  }
+  
+  .ink-brush-title {
+    @apply text-heritage-ink font-song font-bold leading-tight;
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.7);
+  }
+  
+  .brush-btn {
+    @apply relative overflow-hidden bg-heritage-teal text-white 
+      font-kai py-2 px-6 rounded-full transition-all 
+      hover:bg-heritage-teal/90 active:translate-y-0.5;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);
+  }
+  
+  .brush-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/lovable-uploads/4d016a35-3c97-49c4-bf42-4d6135d58998.png');
+    opacity: 0.07;
+    mix-blend-mode: overlay;
+  }
 }
+
+/* Apply font-family directly to specific elements */
+h1, h2, h3, h4, h5, h6 {
+  @apply font-song;
+}
+
+.btn-heritage {
+  @apply bg-heritage-red text-white px-4 py-2 rounded-full hover:bg-heritage-red/90 font-kai;
+}
+
+/* Support for browser compatibility */
+@supports (-webkit-text-stroke: 1px) {
+  .text-stroke {
+    -webkit-text-stroke: 1px rgba(230, 198, 112, 0.3);
+  }
+}
+
+/* Ancient style scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(230, 198, 112, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(214, 69, 65, 0.3);
+  border-radius: 20px;
+}
+

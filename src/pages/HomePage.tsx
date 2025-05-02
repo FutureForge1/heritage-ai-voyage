@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Search, Brush, Music, Book, Mic, ChevronRight, ChevronLeft } from "lucide-react";
 import Header from "@/components/Header";
@@ -8,7 +7,14 @@ import { Button } from "@/components/ui/button";
 
 const HomePage = () => {
   const [activeCategory, setActiveCategory] = useState("全部");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   
+  useEffect(() => {
+    // Check login status
+    const loggedIn = sessionStorage.getItem("isLoggedIn") === "true";
+    setIsLoggedIn(loggedIn);
+  }, []);
+
   const categories = ["全部", "传统技艺", "传统艺术", "戏曲"];
 
   // Featured items for the slider
@@ -47,27 +53,49 @@ const HomePage = () => {
               className="w-6 h-6 mr-2" 
             />
             <div className="text-xs flex-1">
-              <div className="font-bold">成语典故道明松</div>
+              <div className="font-bold font-song">成语典故道明松</div>
               <div className="text-gray-500">语言学习三位一体，文化保护多管齐下</div>
             </div>
           </div>
         </div>
 
+        {/* User Welcome or Login */}
+        <div className="px-4 mb-4">
+          <div className="bg-white rounded-xl p-3 shadow-sm border border-heritage-gold/10 flex justify-between items-center">
+            <div>
+              <h3 className="font-song text-lg">
+                {isLoggedIn ? "欢迎回来" : "游客，您好"}
+              </h3>
+              <p className="text-xs text-gray-500">
+                {isLoggedIn ? "继续探索非遗文化" : "登录解锁更多功能"}
+              </p>
+            </div>
+            
+            {!isLoggedIn && (
+              <Link to="/login">
+                <button className="brush-btn text-sm">
+                  立即登录
+                </button>
+              </Link>
+            )}
+          </div>
+        </div>
+
         {/* AI Assistant Card */}
         <div className="px-4 mb-6">
-          <div className="bg-white rounded-xl p-4 shadow-sm border border-heritage-gold/20">
+          <div className="bg-white rounded-xl p-4 shadow-sm border border-heritage-gold/20 ancient-scroll">
             <div className="flex flex-col items-center justify-center mb-3">
               <div className="w-16 h-16 rounded-full border-2 border-heritage-gold flex items-center justify-center relative">
                 <div className="bg-heritage-paper w-12 h-12 rounded-full flex items-center justify-center">
-                  <span className="text-heritage-gold text-sm font-bold">AI助手</span>
+                  <span className="text-heritage-gold text-sm font-bold font-kai">AI助手</span>
                 </div>
               </div>
-              <h3 className="text-lg font-medium mt-2">学问小学</h3>
+              <h3 className="text-lg font-medium mt-2 font-song">学问小学</h3>
               <p className="text-xs text-gray-500">中国传统文化智能顾问</p>
             </div>
             
             <Link to="/chat">
-              <Button className="w-full bg-heritage-red hover:bg-heritage-red/90 text-white">
+              <Button className="w-full bg-heritage-red hover:bg-heritage-red/90 text-white font-kai">
                 开始聊天
               </Button>
             </Link>
@@ -86,7 +114,7 @@ const HomePage = () => {
               
               <div className="space-y-2">
                 {suggestedQuestions.map((question, idx) => (
-                  <div key={idx} className="bg-heritage-paper px-3 py-2 rounded-md text-sm">
+                  <div key={idx} className="bg-heritage-paper px-3 py-2 rounded-md text-sm font-kai">
                     {question}
                   </div>
                 ))}

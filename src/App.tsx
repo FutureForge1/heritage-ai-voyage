@@ -12,6 +12,9 @@ import ProfilePage from "./pages/ProfilePage";
 import HeritageDetailPage from "./pages/HeritageDetailPage";
 import StoryCreationPage from "./pages/StoryCreationPage";
 import AIDrawingPage from "./pages/AIDrawingPage";
+import MusicPage from "./pages/MusicPage";
+import LoginPage from "./pages/LoginPage";
+import VerifyCodePage from "./pages/VerifyCodePage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,7 +33,10 @@ const App = () => (
           <Route path="/create" element={<CreatePage />} />
           <Route path="/create/story" element={<StoryCreationPage />} />
           <Route path="/create/drawing" element={<AIDrawingPage />} />
+          <Route path="/create/music" element={<MusicPage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/verify" element={<VerifyCodePage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
