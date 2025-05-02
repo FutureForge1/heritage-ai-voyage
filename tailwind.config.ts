@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,15 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Custom colors for the Chinese cultural heritage app
+				heritage: {
+					'red': '#D64541',
+					'cream': '#F5EFE0',
+					'gold': '#E6C670',
+					'teal': '#3A8FB7',
+					'paper': '#F8F4E9',
+					'text': '#333333'
 				}
 			},
 			borderRadius: {
@@ -89,6 +99,10 @@ export default {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out'
+			},
+			backgroundImage: {
+				'heritage-gradient': 'linear-gradient(90deg, #D64541 0%, #3A8FB7 100%)',
+				'paper-texture': "url('/public/lovable-uploads/4d016a35-3c97-49c4-bf42-4d6135d58998.png')"
 			}
 		}
 	},
