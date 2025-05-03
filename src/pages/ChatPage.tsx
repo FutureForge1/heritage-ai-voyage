@@ -18,6 +18,9 @@ const ChatPage = () => {
     // Add user message
     setMessages([...messages, { text: userInput, isUser: true }]);
     
+    // Cache the current input before clearing
+    const currentInput = userInput;
+    
     // Clear input
     setUserInput("");
     
@@ -25,10 +28,10 @@ const ChatPage = () => {
     setTimeout(() => {
       let aiResponse = "";
       
-      if (userInput.includes("剪纸") || userInput.includes("有哪些代表作品")) {
+      if (currentInput.includes("剪纸") || currentInput.includes("有哪些代表作品")) {
         aiResponse = "中国剪纸代表作品包括：1.陕西\"窗花\"，以喜庆吉祥为主题；2.山东\"杨柳青\"剪纸，色彩艳丽；3.江苏\"桃花坞\"剪纸，线条细腻；4.浙江温州剪纸，黑纸人物故事；5.河北蔚县剪纸，造型朴实典雅。这些作品各具特色，表现了不同地域的民俗文化和审美点。";
       } else {
-        aiResponse = `关于"${userInput}"的非物质文化遗产知识非常丰富。这是中国传统文化的重要组成部分，代表着世代相传的技艺和智慧。您想了解更具体的哪一方面呢？`;
+        aiResponse = `关于"${currentInput}"的非物质文化遗产知识非常丰富。这是中国传统文化的重要组成部分，代表着世代相传的技艺和智慧。您想了解更具体的哪一方面呢？`;
       }
       
       setMessages(prev => [...prev, { text: aiResponse, isUser: false }]);
@@ -36,7 +39,9 @@ const ChatPage = () => {
   };
 
   const suggestedQuestions = [
-    "剪纸有哪些代表作品？"
+    "剪纸有哪些代表作品？",
+    "京剧和昆曲有什么区别？",
+    "中国古代四大发明是什么？"
   ];
 
   return (
@@ -76,7 +81,7 @@ const ChatPage = () => {
       {/* Suggested Questions */}
       <div className="p-2 border-t border-gray-200 bg-white">
         <div className="mb-2 px-2">
-          <p className="text-xs text-gray-500">要不要以访客身份关注文章</p>
+          <p className="text-xs text-gray-500">推荐问题</p>
         </div>
         <div className="flex overflow-x-auto gap-2 pb-2">
           {suggestedQuestions.map((q, i) => (

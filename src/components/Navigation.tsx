@@ -1,5 +1,5 @@
 
-import { Home, Compass, Palette, User } from "lucide-react";
+import { Home, Compass, Palette, User, Users } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const Navigation = () => {
@@ -20,6 +20,10 @@ const Navigation = () => {
       <Link to="/create" className={`flex flex-col items-center space-y-1 ${isActive('/create') ? 'text-heritage-red' : 'text-gray-500'}`}>
         <Palette size={24} />
         <span className="text-xs">创作</span>
+      </Link>
+      <Link to="/community" className={`flex flex-col items-center space-y-1 ${isActive('/community') ? 'text-heritage-red' : 'text-gray-500'}`}>
+        <Users size={24} />
+        <span className="text-xs">社区</span>
       </Link>
       <Link to="/profile" className={`flex flex-col items-center space-y-1 ${isActive('/profile') ? 'text-heritage-red' : 'text-gray-500'}`}>
         <User size={24} />

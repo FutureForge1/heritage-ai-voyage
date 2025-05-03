@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Navigation from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
-import { Info, ChevronRight, Settings, LogOut } from "lucide-react";
+import { BookOpen, Bookmark, ChevronRight, Gamepad2, Info, LogOut, MessageSquare, Settings } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 interface UserData {
@@ -111,6 +111,41 @@ const ProfilePage = () => {
             </div>
           </div>
         )}
+        
+        {/* User Features */}
+        <div className="bg-white rounded-xl shadow-sm mb-4">
+          <Link to="/favorites" className="p-4 flex items-center justify-between border-b border-heritage-gold/10">
+            <span className="flex items-center gap-2">
+              <Bookmark size={18} className="text-heritage-gold" />
+              <span>我的收藏</span>
+            </span>
+            <ChevronRight size={18} className="text-heritage-text/50" />
+          </Link>
+          
+          <Link to="/quiz" className="p-4 flex items-center justify-between border-b border-heritage-gold/10">
+            <span className="flex items-center gap-2">
+              <Gamepad2 size={18} className="text-heritage-teal" />
+              <span>知识竞答</span>
+            </span>
+            <ChevronRight size={18} className="text-heritage-text/50" />
+          </Link>
+          
+          <Link to="/community" className="p-4 flex items-center justify-between border-b border-heritage-gold/10">
+            <span className="flex items-center gap-2">
+              <MessageSquare size={18} className="text-heritage-red" />
+              <span>我的社区</span>
+            </span>
+            <ChevronRight size={18} className="text-heritage-text/50" />
+          </Link>
+          
+          <Link to="/guide" className="p-4 flex items-center justify-between">
+            <span className="flex items-center gap-2">
+              <BookOpen size={18} className="text-heritage-gold" />
+              <span>非遗百科</span>
+            </span>
+            <ChevronRight size={18} className="text-heritage-text/50" />
+          </Link>
+        </div>
         
         {/* Settings section */}
         <div className="bg-white rounded-xl shadow-sm mb-4">
