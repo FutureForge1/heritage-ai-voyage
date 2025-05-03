@@ -1,369 +1,230 @@
 
 import { useState, useEffect } from "react";
-import { 
-  Heart, MessageSquare, Share2, Image, Smile, Plus, 
-  User, Search, Filter, Award, Clock, ThumbsUp
-} from "lucide-react";
+import { Link } from "react-router-dom";
+import { ChevronRight, MessageCircle, Heart, Share2, Search, Plus, Users } from "lucide-react";
 import Header from "@/components/Header";
 import Navigation from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { useToast } from "@/components/ui/use-toast";
+import { Badge } from "@/components/ui/badge";
+
+interface Author {
+  name: string;
+  avatar?: string;
+}
 
 interface Post {
   id: string;
-  author: {
-    name: string;
-    avatar?: string;
-  };
+  author: Author;
   content: string;
-  images?: string[];
+  images: string[];
   likes: number;
   comments: number;
   time: string;
-  isLiked?: boolean;
-  tags?: string[];
-  type: 'heritage' | 'story' | 'art' | 'music';
+  tags: string[];
+  type: "heritage" | "story" | "art" | "music";
 }
 
 const CommunityPage = () => {
   const [posts, setPosts] = useState<Post[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("all");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [newPostContent, setNewPostContent] = useState("");
-  const [newPostType, setNewPostType] = useState<Post['type']>("heritage");
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { toast } = useToast();
   
   useEffect(() => {
     const loggedIn = sessionStorage.getItem("isLoggedIn") === "true";
     setIsLoggedIn(loggedIn);
     
-    // Simulate loading posts
-    setTimeout(() => {
-      const mockPosts = [
-        {
-          id: "p1",
-          author: {
-            name: "文化爱好者",
-            avatar: "/lovable-uploads/e6dab9a5-cae6-4e3b-ba66-e09d7f040f5b.png"
-          },
-          content: "今天参观了苏州的非遗展览，被精美的苏绣深深吸引。这些作品不仅仅是手工艺品，更是文化的传承和匠人精神的体现。希望更多人能了解并爱上这些传统艺术！",
-          images: ["/lovable-uploads/37e2831f-4bf1-4005-b78f-3f5ee4ea8d5f.png"],
-          likes: 24,
-          comments: 5,
-          time: "1小时前",
-          tags: ["苏绣", "非遗展览"],
-          type: "heritage"
+    // Fetch sample posts
+    setPosts([
+      {
+        id: "post1",
+        author: {
+          name: "非遗爱好者",
+          avatar: "/lovable-uploads/e6dab9a5-cae6-4e3b-ba66-e09d7f040f5b.png"
         },
-        {
-          id: "p2",
-          author: {
-            name: "传统手艺人"
-          },
-          content: "用AI创作了一幅水墨画风格的作品，尝试将传统与科技结合。虽然AI不能替代手工艺人的匠心，但可以作为传统文化传播的新渠道。大家觉得怎么样？",
-          images: ["/lovable-uploads/552e7ba1-8dd2-4a08-b7ab-f6e99d8f6669.png"],
-          likes: 18,
-          comments: 7,
-          time: "3小时前",
-          tags: ["AI创作", "水墨画"],
-          type: "art"
+        content: "向大家分享我最近了解到的剪纸艺术，这些传统的剪纸作品蕴含着丰富的文化意义，每一刀都饱含匠人的心血。",
+        images: ["/lovable-uploads/49a3b358-40e1-4cc0-abdd-be98580d1179.png"],
+        likes: 42,
+        comments: 15,
+        time: "3小时前",
+        tags: ["剪纸", "非物质文化遗产"],
+        type: "heritage"
+      },
+      {
+        id: "post2",
+        author: {
+          name: "AI画匠"
         },
-        {
-          id: "p3",
-          author: {
-            name: "非遗守护者",
-            avatar: "/lovable-uploads/6cf0dd4d-506d-4e3d-b80d-4f13c1c6a4a3.png"
-          },
-          content: "分享一则关于剪纸历史的小故事：剪纸最早可以追溯到汉代，当时人们用金箔剪成各种形状贴在头发上作为装饰。随着造纸术的发展，剪纸艺术才真正繁荣起来。每个时代的剪纸都反映了当时的社会生活和人们的审美观念。",
-          likes: 32,
-          comments: 9,
-          time: "5小时前",
-          tags: ["剪纸历史", "文化传承"],
-          type: "story"
-        }
-      ];
-      
-      setPosts(mockPosts);
-      setIsLoading(false);
-    }, 1500);
+        content: "今天用AI创作了一副京剧脸谱，大家看看效果如何？试图捕捉传统与现代的结合点。",
+        images: ["/lovable-uploads/ca09f43e-a05b-4384-8a25-6b0136b7dcf0.png"],
+        likes: 87,
+        comments: 22,
+        time: "昨天",
+        tags: ["AI创作", "京剧"],
+        type: "art"
+      },
+      {
+        id: "post3",
+        author: {
+          name: "文化传承人",
+          avatar: "/lovable-uploads/872d313c-206d-42ef-9521-8793ba6f5366.png"
+        },
+        content: "分享一段我创作的古筝曲，灵感来源于民间传说《牛郎织女》，希望大家喜欢！",
+        images: [],
+        likes: 56,
+        comments: 8,
+        time: "2天前",
+        tags: ["音乐创作", "古筝"],
+        type: "music"
+      }
+    ]);
   }, []);
   
-  const handleLikePost = (postId: string) => {
-    setPosts(prev => prev.map(post => {
-      if (post.id === postId) {
-        return {
-          ...post,
-          isLiked: !post.isLiked,
-          likes: post.isLiked ? post.likes - 1 : post.likes + 1
-        };
-      }
-      return post;
-    }));
+  const filterPosts = (type: string) => {
+    if (type === "all") return posts;
+    return posts.filter(post => post.type === type);
   };
   
-  const handleSharePost = (postId: string) => {
-    toast({
-      title: "分享成功",
-      description: "内容已复制，可以分享给朋友了"
-    });
-  };
-
-  const handleSubmitPost = () => {
-    if (!newPostContent.trim()) {
-      toast({
-        title: "发布失败",
-        description: "请输入内容后再发布",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    const newPost: Post = {
-      id: `p${Date.now()}`,
-      author: {
-        name: "我"
-      },
-      content: newPostContent,
-      likes: 0,
-      comments: 0,
-      time: "刚刚",
-      type: newPostType,
-      tags: [],
-      isLiked: false
-    };
-    
-    setPosts([newPost, ...posts]);
-    setNewPostContent("");
-    setIsDialogOpen(false);
-    
-    toast({
-      title: "发布成功",
-      description: "你的内容已发布到社区"
-    });
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
   };
   
   return (
     <div className="pb-20 min-h-screen bg-heritage-cream">
       <Header 
         title="非遗社区" 
-        subtitle="分享你的非遗见闻与创作"
-        showBack={false}
+        subtitle="分享发现，共同传承"
+        showBack={true}
         showNotification={true}
       />
       
       <div className="mx-auto max-w-lg px-4 py-4">
-        {/* Search and filters */}
-        <div className="mb-4 flex items-center justify-between">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
-            <input 
-              type="text" 
-              placeholder="搜索社区内容..." 
-              className="w-full pl-10 pr-3 py-2 bg-white rounded-full border border-gray-200 text-sm focus:outline-none focus:border-heritage-gold/50"
+        {/* Search and New Post */}
+        <div className="flex justify-between items-center mb-4">
+          <div className="relative flex-1 mr-2">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+            <Input 
+              type="search" 
+              placeholder="搜索社区内容" 
+              className="pl-9 bg-white transition-all hover:shadow-md focus:shadow-md"
             />
           </div>
-          <button className="ml-2 p-2 bg-white rounded-full border border-gray-200">
-            <Filter size={18} />
-          </button>
+          
+          <Link to="/community/new">
+            <Button className="bg-heritage-red hover:bg-heritage-red/90 transition-all hover:shadow-md transform hover:-translate-y-1 hover:scale-105 duration-200">
+              <Plus size={18} className="mr-1" />
+              发布
+            </Button>
+          </Link>
         </div>
         
-        {/* Tabs */}
-        <Tabs defaultValue="all" className="mb-4">
-          <TabsList className="w-full grid grid-cols-5">
-            <TabsTrigger value="all" className="text-sm">全部</TabsTrigger>
-            <TabsTrigger value="heritage" className="text-sm">非遗</TabsTrigger>
-            <TabsTrigger value="story" className="text-sm">故事</TabsTrigger>
-            <TabsTrigger value="art" className="text-sm">绘画</TabsTrigger>
-            <TabsTrigger value="music" className="text-sm">音乐</TabsTrigger>
+        {/* Friend suggestions */}
+        <div className="bg-white rounded-xl p-4 shadow-sm mb-4 transition-all hover:shadow-md">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-medium flex items-center">
+              <Users size={18} className="mr-2 text-heritage-gold" />
+              推荐好友
+            </h3>
+            <Link to="/friends" className="text-sm text-heritage-teal">查看更多</Link>
+          </div>
+          
+          <div className="flex space-x-3 overflow-x-auto py-2 scrollbar-hide">
+            {[1, 2, 3, 4].map((friend) => (
+              <div key={friend} className="flex-shrink-0 w-16 text-center transition-transform hover:-translate-y-1 duration-200">
+                <div className="w-12 h-12 rounded-full bg-heritage-gold/20 mx-auto mb-1 overflow-hidden">
+                  <img 
+                    src={`/lovable-uploads/e6dab9a5-cae6-4e3b-ba66-e09d7f040f5b.png`} 
+                    alt="User" 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <p className="text-xs truncate">文化爱好者{friend}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Content Tabs */}
+        <Tabs defaultValue="all" className="mb-4" onValueChange={handleTabChange}>
+          <TabsList className="grid grid-cols-4 bg-white shadow-sm p-1">
+            <TabsTrigger value="all" className="data-[state=active]:bg-heritage-red data-[state=active]:text-white transition-all">全部</TabsTrigger>
+            <TabsTrigger value="heritage" className="data-[state=active]:bg-heritage-red data-[state=active]:text-white transition-all">非遗</TabsTrigger>
+            <TabsTrigger value="story" className="data-[state=active]:bg-heritage-red data-[state=active]:text-white transition-all">故事</TabsTrigger>
+            <TabsTrigger value="art" className="data-[state=active]:bg-heritage-red data-[state=active]:text-white transition-all">创作</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="all" className="mt-4">
-            {/* Create post button */}
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="w-full bg-heritage-gold hover:bg-heritage-gold/90 mb-4">
-                  <Plus size={18} className="mr-2" /> 发布内容
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>发布内容</DialogTitle>
-                </DialogHeader>
-                <textarea
-                  value={newPostContent}
-                  onChange={(e) => setNewPostContent(e.target.value)}
-                  placeholder="分享你的非遗见闻、想法或创作..."
-                  className="w-full h-32 p-3 border border-heritage-gold/30 rounded-lg mb-4 focus:outline-none focus:ring-1 focus:ring-heritage-gold"
-                />
-                
-                <div className="mb-4">
-                  <label className="block text-sm font-medium mb-1">内容类型</label>
-                  <select 
-                    value={newPostType}
-                    onChange={(e) => setNewPostType(e.target.value as Post['type'])}
-                    className="w-full p-2 border border-heritage-gold/30 rounded-lg focus:outline-none"
-                  >
-                    <option value="heritage">非遗知识</option>
-                    <option value="story">传统故事</option>
-                    <option value="art">艺术作品</option>
-                    <option value="music">传统音乐</option>
-                  </select>
-                </div>
-                
-                <div className="flex mb-4">
-                  <button className="flex items-center justify-center p-2 border border-dashed border-heritage-gold/30 rounded-lg mr-2">
-                    <Image size={20} className="text-heritage-gold" />
-                  </button>
-                </div>
-                
-                <div className="flex justify-end">
-                  <Button
-                    onClick={handleSubmitPost}
-                    className="bg-heritage-red hover:bg-heritage-red/90"
-                  >
-                    发布
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
-            
-            {/* Posts */}
-            {isLoading ? (
-              <div className="flex flex-col items-center py-8">
-                <div className="w-10 h-10 border-4 border-heritage-gold border-t-transparent rounded-full animate-spin mb-4"></div>
-                <p className="text-sm text-gray-500">加载中...</p>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {posts.map(post => (
-                  <div key={post.id} className="bg-white rounded-xl p-4 shadow-sm">
+          {["all", "heritage", "story", "art"].map((tab) => (
+            <TabsContent key={tab} value={tab} className="space-y-4">
+              {filterPosts(tab).length > 0 ? (
+                filterPosts(tab).map((post) => (
+                  <div key={post.id} className="bg-white rounded-xl shadow-sm p-4 transition-all hover:shadow-md">
                     <div className="flex items-center mb-3">
-                      <Avatar className="mr-3">
+                      <div className="w-10 h-10 rounded-full bg-heritage-gold/20 mr-3 overflow-hidden">
                         {post.author.avatar ? (
-                          <AvatarImage src={post.author.avatar} />
-                        ) : null}
-                        <AvatarFallback className="bg-heritage-teal/20 text-heritage-teal">
-                          {post.author.name.charAt(0)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className="font-medium text-sm">{post.author.name}</p>
-                        <p className="text-xs text-gray-500">{post.time}</p>
+                          <img 
+                            src={post.author.avatar} 
+                            alt={post.author.name} 
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-heritage-gold font-bold">
+                            {post.author.name.charAt(0)}
+                          </div>
+                        )}
                       </div>
-                      <div className="ml-auto">
-                        <span className="text-xs px-2 py-1 bg-heritage-paper text-heritage-text rounded-full">
-                          {post.type === "heritage" && "非遗知识"}
-                          {post.type === "story" && "传统故事"}
-                          {post.type === "art" && "艺术作品"}
-                          {post.type === "music" && "传统音乐"}
-                        </span>
+                      <div>
+                        <h4 className="font-medium">{post.author.name}</h4>
+                        <p className="text-xs text-gray-500">{post.time}</p>
                       </div>
                     </div>
                     
-                    <p className="text-sm mb-3">{post.content}</p>
+                    <p className="mb-3">{post.content}</p>
                     
-                    {post.images && post.images.length > 0 && (
-                      <div className={`grid ${post.images.length > 1 ? 'grid-cols-2' : 'grid-cols-1'} gap-2 mb-3`}>
-                        {post.images.map((img, index) => (
-                          <div key={index} className="rounded-lg overflow-hidden">
-                            <img src={img} alt={`Post image ${index + 1}`} className="w-full h-40 object-cover" />
-                          </div>
-                        ))}
+                    {post.images.length > 0 && (
+                      <div className="mb-3">
+                        <img 
+                          src={post.images[0]} 
+                          alt="Post media" 
+                          className="w-full rounded-lg h-48 object-cover"
+                        />
                       </div>
                     )}
                     
-                    {post.tags && post.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mb-3">
-                        {post.tags.map((tag, index) => (
-                          <span key={index} className="text-xs px-2 py-1 bg-heritage-gold/10 text-heritage-gold rounded-full">
-                            #{tag}
-                          </span>
-                        ))}
-                      </div>
-                    )}
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      {post.tags.map((tag, index) => (
+                        <Badge key={index} variant="outline" className="bg-heritage-paper border-heritage-gold/20 text-heritage-text">
+                          #{tag}
+                        </Badge>
+                      ))}
+                    </div>
                     
-                    <div className="flex justify-between pt-2 border-t border-gray-100">
-                      <button 
-                        onClick={() => handleLikePost(post.id)}
-                        className={`flex items-center text-sm ${post.isLiked ? 'text-heritage-red' : 'text-gray-500'}`}
-                      >
-                        <Heart size={16} className={`mr-1 ${post.isLiked ? 'fill-heritage-red' : ''}`} />
-                        <span>{post.likes}</span>
+                    <div className="flex justify-between border-t border-gray-100 pt-3">
+                      <button className="flex items-center text-gray-500 hover:text-heritage-red transition-colors">
+                        <Heart size={18} className="mr-1" />
+                        <span className="text-sm">{post.likes}</span>
                       </button>
                       
-                      <button className="flex items-center text-sm text-gray-500">
-                        <MessageSquare size={16} className="mr-1" />
-                        <span>{post.comments}</span>
+                      <button className="flex items-center text-gray-500 hover:text-heritage-teal transition-colors">
+                        <MessageCircle size={18} className="mr-1" />
+                        <span className="text-sm">{post.comments}</span>
                       </button>
                       
-                      <button 
-                        onClick={() => handleSharePost(post.id)}
-                        className="flex items-center text-sm text-gray-500"
-                      >
-                        <Share2 size={16} />
+                      <button className="flex items-center text-gray-500 hover:text-heritage-gold transition-colors">
+                        <Share2 size={18} className="mr-1" />
+                        <span className="text-sm">分享</span>
                       </button>
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
-          </TabsContent>
-          
-          <TabsContent value="heritage" className="mt-4">
-            <div className="text-center py-8">
-              <p className="text-sm text-gray-500 mb-4">过滤显示非遗知识相关的内容</p>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="story" className="mt-4">
-            <div className="text-center py-8">
-              <p className="text-sm text-gray-500 mb-4">过滤显示传统故事相关的内容</p>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="art" className="mt-4">
-            <div className="text-center py-8">
-              <p className="text-sm text-gray-500 mb-4">过滤显示艺术作品相关的内容</p>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="music" className="mt-4">
-            <div className="text-center py-8">
-              <p className="text-sm text-gray-500 mb-4">过滤显示传统音乐相关的内容</p>
-            </div>
-          </TabsContent>
+                ))
+              ) : (
+                <div className="bg-white rounded-xl p-6 text-center">
+                  <p className="text-gray-500">暂无相关内容</p>
+                </div>
+              )}
+            </TabsContent>
+          ))}
         </Tabs>
-        
-        {/* Community stats */}
-        <div className="bg-white rounded-xl p-4 shadow-sm mb-6">
-          <h3 className="font-medium mb-3">社区数据</h3>
-          <div className="grid grid-cols-3 gap-2">
-            <div className="p-2 text-center">
-              <div className="flex items-center justify-center mb-2">
-                <User size={20} className="text-heritage-gold" />
-              </div>
-              <p className="text-xl font-bold">142</p>
-              <p className="text-xs text-gray-500">活跃用户</p>
-            </div>
-            <div className="p-2 text-center">
-              <div className="flex items-center justify-center mb-2">
-                <Award size={20} className="text-heritage-red" />
-              </div>
-              <p className="text-xl font-bold">58</p>
-              <p className="text-xs text-gray-500">非遗传承人</p>
-            </div>
-            <div className="p-2 text-center">
-              <div className="flex items-center justify-center mb-2">
-                <ThumbsUp size={20} className="text-heritage-teal" />
-              </div>
-              <p className="text-xl font-bold">1250</p>
-              <p className="text-xs text-gray-500">分享点赞</p>
-            </div>
-          </div>
-        </div>
       </div>
       
       <Navigation />

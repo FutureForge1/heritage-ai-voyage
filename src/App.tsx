@@ -19,6 +19,7 @@ import NotFound from "./pages/NotFound";
 import FavoritesPage from "./pages/FavoritesPage";
 import QuizPage from "./pages/QuizPage";
 import CommunityPage from "./pages/CommunityPage";
+import FriendsPage from "./pages/FriendsPage";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +42,7 @@ const App = () => (
           <Route path="/favorites" element={<FavoritesPage />} />
           <Route path="/quiz" element={<QuizPage />} />
           <Route path="/community" element={<CommunityPage />} />
+          <Route path="/friends" element={<FriendsPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/verify" element={<VerifyCodePage />} />
           <Route path="*" element={<NotFound />} />
