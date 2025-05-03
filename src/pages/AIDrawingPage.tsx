@@ -1,7 +1,6 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Image, Sparkles, Download, Loader2, Save, Rotate } from "lucide-react";
+import { ArrowLeft, Image, Sparkles, Download, Loader2, Save, RotateCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import { useToast } from "@/components/ui/use-toast";
@@ -203,7 +202,7 @@ const AIDrawingPage = () => {
                 className="bg-heritage-red hover:bg-heritage-red/90"
                 onClick={() => handleGenerate()}
               >
-                <Rotate size={16} className="mr-2" /> 重新生成
+                <RotateCw size={16} className="mr-2" /> 重新生成
               </Button>
             </div>
           </div>
