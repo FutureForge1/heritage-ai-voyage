@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Check, X, ChevronRight, Award, Clock3, Loader2, Share2, ArrowRight } from "lucide-react";
 import Header from "@/components/Header";
@@ -33,18 +32,18 @@ const QuizPage = () => {
       question: "中国剪纸被列入联合国教科文组织的哪一项名录？",
       options: ["世界文化遗产", "人类非物质文化遗产代表作名录", "濒危语言名录", "世界记忆名录"],
       correctAnswer: 1,
-      explanation: "中国剪纸于2009年被列入联合国教科文组织"人类非物质文化遗产代表作名录"。"
+      explanation: "中国剪纸于2009年被列入联合国教科文组织\"人类非物质文化遗产代表作名录\"。"
     },
     {
       id: "q2",
-      question: "下列哪个不是京剧的"四大名旦"之一？",
+      question: "下列哪个不是京剧的\"四大名旦\"之一？",
       options: ["梅兰芳", "程砚秋", "尚小云", "李玉茹"],
       correctAnswer: 3,
       explanation: "京剧四大名旦是指梅兰芳、荀慧生、程砚秋和尚小云。李玉茹不在其中。"
     },
     {
       id: "q3",
-      question: "中国古代"四大发明"不包括以下哪一项？",
+      question: "中国古代\"四大发明\"不包括以下哪一项？",
       options: ["指南针", "火药", "造纸术", "丝绸"],
       correctAnswer: 3,
       explanation: "中国古代四大发明是指造纸术、印刷术、火药和指南针，不包括丝绸。"
@@ -61,7 +60,7 @@ const QuizPage = () => {
       question: "昆曲被称为什么？",
       options: ["百戏之祖", "戏曲之花", "国粹", "东方芭蕾"],
       correctAnswer: 0,
-      explanation: "昆曲被誉为"百戏之祖"，是中国最古老的戏曲剧种之一。"
+      explanation: "昆曲被誉为\"百戏之祖\"，是中国最古老的戏曲剧种之一。"
     }
   ];
   
