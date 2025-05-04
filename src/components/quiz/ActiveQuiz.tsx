@@ -1,10 +1,11 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { QuizQuestion, QuizMode } from "@/types/quiz";
 import { Check, X, ArrowRight, Clock3 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import AIRecommendations from "./AIRecommendations";
 
 interface ActiveQuizProps {
   currentQuestion: QuizQuestion;
@@ -15,8 +16,10 @@ interface ActiveQuizProps {
   isAnswered: boolean;
   selectedOption: number | null;
   quizMode: QuizMode;
+  allQuestions: QuizQuestion[];
   onAnswer: (index: number | null) => void;
   onNext: () => void;
+  onSelectRelatedQuestion?: (questionId: string) => void;
 }
 
 const ActiveQuiz: React.FC<ActiveQuizProps> = ({
@@ -28,10 +31,37 @@ const ActiveQuiz: React.FC<ActiveQuizProps> = ({
   isAnswered,
   selectedOption,
   quizMode,
+  allQuestions,
   onAnswer,
-  onNext
+  onNext,
+  onSelectRelatedQuestion
 }) => {
   const progressPercentage = ((currentQuestionIndex + 1) / quizMode.questionCount) * 100;
+  
+  // Animation effect for new question
+  useEffect(() => {
+    const questionContainer = document.getElementById('question-container');
+    if (questionContainer) {
+      questionContainer.classList.add('question-enter');
+      
+      const timer = setTimeout(() => {
+        questionContainer.classList.remove('question-enter');
+      }, 500);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [currentQuestion.id]);
+  
+  // Animation for correct/incorrect answers
+  useEffect(() => {
+    if (isAnswered) {
+      const isCorrect = selectedOption === currentQuestion.correctAnswer;
+      const resultElement = document.getElementById('answer-result');
+      if (resultElement) {
+        resultElement.classList.add(isCorrect ? 'answer-correct' : 'answer-incorrect');
+      }
+    }
+  }, [isAnswered, selectedOption, currentQuestion.correctAnswer]);
   
   return (
     <div className="bg-white rounded-xl p-6 shadow-sm mb-6">
@@ -52,27 +82,29 @@ const ActiveQuiz: React.FC<ActiveQuizProps> = ({
         
         <div className="flex items-center">
           <span className="text-sm">得分: </span>
-          <span className="text-heritage-red font-medium ml-1">{score}</span>
+          <span className="text-heritage-red font-medium ml-1 score-value">{score}</span>
         </div>
       </div>
       
       <Progress 
         value={progressPercentage} 
         className="mb-6 h-2 bg-heritage-gold/20"
+        indicatorClassName="bg-heritage-gold"
+        isAnimated={true}
       />
       
       {streakCount >= 3 && (
-        <div className="mb-4 bg-heritage-gold/10 p-2 rounded-lg flex items-center justify-between">
+        <div className="mb-4 bg-heritage-gold/10 p-2 rounded-lg flex items-center justify-between animate-bounce-subtle">
           <span className="text-sm font-medium text-heritage-gold flex items-center">
             <span className="mr-1">🔥</span> {streakCount} 连胜
           </span>
-          <Badge className="bg-heritage-gold border-none">
+          <Badge className="bg-heritage-gold border-none animate-pulse">
             +{streakCount >= 5 ? 20 : 10} 积分
           </Badge>
         </div>
       )}
       
-      <div className="mb-6">
+      <div id="question-container" className="mb-6 transition-all duration-300">
         <div className="mb-4 flex items-center">
           <Badge className="bg-heritage-paper border-heritage-gold/20 text-heritage-text mr-2">
             {currentQuestion.category === "traditional" && "传统文化"}
@@ -96,7 +128,7 @@ const ActiveQuiz: React.FC<ActiveQuizProps> = ({
               key={index}
               onClick={() => !isAnswered && onAnswer(index)}
               disabled={isAnswered}
-              className={`w-full text-left p-3 rounded-lg border transition-all duration-200 transform ${
+              className={`option-button w-full text-left p-3 rounded-lg border transition-all duration-300 transform ${
                 isAnswered
                   ? index === currentQuestion.correctAnswer
                     ? 'bg-green-50 border-green-500 scale-[1.02]'
@@ -124,7 +156,7 @@ const ActiveQuiz: React.FC<ActiveQuizProps> = ({
       </div>
       
       {isAnswered && (
-        <div className="mb-6">
+        <div id="answer-result" className="mb-6 transition-all duration-300">
           <div className={`p-3 rounded-lg ${
             selectedOption === currentQuestion.correctAnswer
               ? 'bg-green-50 border border-green-200'
@@ -139,13 +171,21 @@ const ActiveQuiz: React.FC<ActiveQuizProps> = ({
       )}
       
       {isAnswered && (
-        <Button 
-          onClick={onNext}
-          className="w-full bg-heritage-teal hover:bg-heritage-teal/90 transition-transform hover:scale-105 duration-200"
-        >
-          {currentQuestionIndex < quizMode.questionCount - 1 ? '下一题' : '查看结果'}
-          <ArrowRight size={16} className="ml-2" />
-        </Button>
+        <>
+          <AIRecommendations 
+            currentQuestion={currentQuestion} 
+            allQuestions={allQuestions}
+            onQuestionSelect={(id) => onSelectRelatedQuestion?.(id)}
+          />
+          
+          <Button 
+            onClick={onNext}
+            className="w-full bg-heritage-teal hover:bg-heritage-teal/90 transition-transform hover:scale-105 duration-300"
+          >
+            {currentQuestionIndex < quizMode.questionCount - 1 ? '下一题' : '查看结果'}
+            <ArrowRight size={16} className="ml-2" />
+          </Button>
+        </>
       )}
     </div>
   );

@@ -1,8 +1,8 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { QuizMode, QuizQuestion } from "@/types/quiz";
-import { useToast } from "@/components/ui/use-toast";
-import { filterQuestionsByMode, calculateStreakBonus } from "@/utils/quizUtils";
+import { useToast } from "@/hooks/use-toast";
+import { filterQuestionsByMode, calculateStreakBonus, analyzeKnowledgeGaps } from "@/utils/quizUtils";
 
 interface UseQuizProps {
   questions: QuizQuestion[];
@@ -23,6 +23,11 @@ export const useQuiz = ({ questions }: UseQuizProps) => {
   const [totalPoints, setTotalPoints] = useState(0);
   const [unlockedAchievements, setUnlockedAchievements] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState("daily");
+  const [answeredQuestions, setAnsweredQuestions] = useState<
+    { question: QuizQuestion; correct: boolean }[]
+  >([]);
+  const [knowledgeGaps, setKnowledgeGaps] = useState<string[]>([]);
+  const [selectedKnowledgeNode, setSelectedKnowledgeNode] = useState<string | null>(null);
 
   const { toast } = useToast();
 
@@ -57,7 +62,29 @@ export const useQuiz = ({ questions }: UseQuizProps) => {
     };
   }, [quizStarted, quizFinished, isAnswered, timeLeft]);
 
-  const selectQuizMode = (mode: QuizMode) => {
+  // Analyze knowledge gaps when user has answered enough questions
+  useEffect(() => {
+    if (answeredQuestions.length >= 5) {
+      const allCategories = ["traditional", "opera", "crafts", "festival", "general"];
+      const gaps = analyzeKnowledgeGaps(answeredQuestions, allCategories);
+      setKnowledgeGaps(gaps);
+      
+      if (gaps.length > 0) {
+        toast({
+          title: "学习提示",
+          description: `我们发现您在 ${gaps.map(gap => {
+            if (gap === "traditional") return "传统文化";
+            if (gap === "opera") return "戏曲";
+            if (gap === "crafts") return "传统工艺";
+            if (gap === "festival") return "传统节日";
+            return "通用知识";
+          }).join(', ')} 方面的知识有所欠缺，建议多加学习。`,
+        });
+      }
+    }
+  }, [answeredQuestions, toast]);
+
+  const selectQuizMode = (mode: QuizMode | null) => {
     setSelectedQuizMode(mode);
   };
   
@@ -76,7 +103,17 @@ export const useQuiz = ({ questions }: UseQuizProps) => {
       setScore(0);
       setStreakCount(0);
       setTimeLeft(selectedQuizMode.timeLimit);
+      setAnsweredQuestions([]);
       setIsLoading(false);
+      
+      // Add entrance animation to question container
+      const questionContainer = document.getElementById('question-container');
+      if (questionContainer) {
+        questionContainer.classList.add('question-enter');
+        setTimeout(() => {
+          questionContainer.classList.remove('question-enter');
+        }, 500);
+      }
     }, 1000);
   };
 
@@ -86,9 +123,17 @@ export const useQuiz = ({ questions }: UseQuizProps) => {
     
     if (!filteredQuestions.length) return;
     
-    const correctAnswer = filteredQuestions[currentQuestionIndex].correctAnswer;
+    const currentQuestion = filteredQuestions[currentQuestionIndex];
+    const correctAnswer = currentQuestion.correctAnswer;
+    const isCorrect = optionIndex === correctAnswer;
     
-    if (optionIndex === correctAnswer) {
+    // Track answered questions for knowledge analysis
+    setAnsweredQuestions([...answeredQuestions, {
+      question: currentQuestion,
+      correct: isCorrect
+    }]);
+    
+    if (isCorrect) {
       // Correct answer
       setScore(prev => prev + 1);
       setStreakCount(prev => prev + 1);
@@ -97,7 +142,15 @@ export const useQuiz = ({ questions }: UseQuizProps) => {
       const streakBonus = calculateStreakBonus(streakCount);
       const questionPoints = 20 + streakBonus;
       
-      // Update total points
+      // Update total points with animation
+      const pointsDisplay = document.querySelector('.score-value');
+      if (pointsDisplay) {
+        pointsDisplay.classList.add('score-increase');
+        setTimeout(() => {
+          pointsDisplay.classList.remove('score-increase');
+        }, 1000);
+      }
+      
       setTotalPoints(prev => prev + questionPoints);
       
       // Show toast for streak
@@ -113,7 +166,7 @@ export const useQuiz = ({ questions }: UseQuizProps) => {
     }
   };
 
-  const nextQuestion = () => {
+  const nextQuestion = useCallback(() => {
     if (!selectedQuizMode || !filteredQuestions.length) return;
     
     if (currentQuestionIndex < selectedQuizMode.questionCount - 1) {
@@ -121,8 +174,31 @@ export const useQuiz = ({ questions }: UseQuizProps) => {
       setIsAnswered(false);
       setSelectedOption(null);
       setTimeLeft(selectedQuizMode.timeLimit);
+      
+      // Add entrance animation to next question
+      setTimeout(() => {
+        const questionContainer = document.getElementById('question-container');
+        if (questionContainer) {
+          questionContainer.classList.add('question-enter');
+          setTimeout(() => {
+            questionContainer.classList.remove('question-enter');
+          }, 500);
+        }
+      }, 50);
     } else {
       finishQuiz();
+    }
+  }, [currentQuestionIndex, selectedQuizMode, filteredQuestions]);
+
+  const selectRelatedQuestion = (questionId: string) => {
+    const questionIndex = filteredQuestions.findIndex(q => q.id === questionId);
+    if (questionIndex >= 0) {
+      toast({
+        title: "已添加至队列",
+        description: "相关问题已添加至答题队列，将在当前答题结束后出现。",
+      });
+      
+      // We could potentially add this to the question queue for future implementation
     }
   };
 
@@ -163,6 +239,7 @@ export const useQuiz = ({ questions }: UseQuizProps) => {
     setScore(0);
     setIsAnswered(false);
     setSelectedOption(null);
+    setAnsweredQuestions([]);
   };
 
   const shareResult = () => {
@@ -187,13 +264,19 @@ export const useQuiz = ({ questions }: UseQuizProps) => {
     totalPoints,
     unlockedAchievements,
     activeTab,
+    answeredQuestions,
+    knowledgeGaps,
     currentQuestion: filteredQuestions[currentQuestionIndex],
+    allQuestions: questions,
     setActiveTab,
     selectQuizMode,
     startQuiz,
     handleAnswer,
     nextQuestion,
     restartQuiz,
-    shareResult
+    shareResult,
+    selectRelatedQuestion,
+    setSelectedKnowledgeNode,
+    selectedKnowledgeNode
   };
 };
