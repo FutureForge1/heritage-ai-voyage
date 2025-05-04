@@ -62,7 +62,7 @@ const GuidePage = () => {
   
   const filteredItems = heritageItems.filter(item => 
     item.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    item.description.toLowerCase().includes(searchQuery.toLowerCase())
+    (item.description && item.description.toLowerCase().includes(searchQuery.toLowerCase()))
   );
   
   return (

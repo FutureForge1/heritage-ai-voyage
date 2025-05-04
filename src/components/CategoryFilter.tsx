@@ -1,30 +1,32 @@
 
-import { useState } from "react";
+import React from "react";
 
-interface CategoryFilterProps {
+export interface CategoryFilterProps {
   categories: string[];
   activeCategory: string;
-  onCategoryChange: (category: string) => void;
+  onSelectCategory: (category: string) => void; // Adding this missing prop
 }
 
-const CategoryFilter = ({ categories, activeCategory, onCategoryChange }: CategoryFilterProps) => {
+const CategoryFilter = ({
+  categories,
+  activeCategory,
+  onSelectCategory
+}: CategoryFilterProps) => {
   return (
-    <div className="w-full overflow-x-auto no-scrollbar">
-      <div className="flex gap-4 p-2 min-w-max">
-        {categories.map((category) => (
-          <button
-            key={category}
-            onClick={() => onCategoryChange(category)}
-            className={`whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-              activeCategory === category
-                ? 'bg-heritage-red text-white'
-                : 'bg-white border border-heritage-gold/30 text-heritage-text hover:bg-heritage-red/10'
-            }`}
-          >
-            {category}
-          </button>
-        ))}
-      </div>
+    <div className="flex overflow-x-auto space-x-2 pb-2 scrollbar-hide">
+      {categories.map((category) => (
+        <button
+          key={category}
+          className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+            activeCategory === category
+              ? "bg-heritage-red text-white"
+              : "bg-white text-heritage-text hover:bg-heritage-paper"
+          }`}
+          onClick={() => onSelectCategory(category)}
+        >
+          {category}
+        </button>
+      ))}
     </div>
   );
 };

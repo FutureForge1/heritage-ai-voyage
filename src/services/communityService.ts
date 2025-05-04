@@ -8,18 +8,36 @@ export const getAllPosts = async (): Promise<CommunityPost[]> => {
     .from('community_posts')
     .select(`
       *,
-      author:profiles(*),
-      images:post_images(*),
-      tags:post_tags(*)
-    `)
-    .order('created_at', { ascending: false });
+      profiles!author_id(*)
+    `);
 
   if (error) {
     console.error("Error fetching community posts:", error);
     return [];
   }
+  
+  // Add additional data through separate queries
+  const posts = data as unknown as CommunityPost[];
 
-  return data as unknown as CommunityPost[];
+  // Get images for each post
+  for (const post of posts) {
+    // Get images
+    const { data: images } = await supabase
+      .from('post_images')
+      .select('*')
+      .eq('post_id', post.id);
+      
+    // Get tags
+    const { data: tags } = await supabase
+      .from('post_tags')
+      .select('*')
+      .eq('post_id', post.id);
+      
+    post.images = images as PostImage[];
+    post.tags = tags as PostTag[];
+  }
+
+  return posts;
 }
 
 // Fetch posts by type
@@ -28,19 +46,37 @@ export const getPostsByType = async (type: string): Promise<CommunityPost[]> => 
     .from('community_posts')
     .select(`
       *,
-      author:profiles(*),
-      images:post_images(*),
-      tags:post_tags(*)
+      profiles!author_id(*)
     `)
-    .eq('type', type)
-    .order('created_at', { ascending: false });
+    .eq('type', type);
 
   if (error) {
     console.error(`Error fetching ${type} posts:`, error);
     return [];
   }
+  
+  // Add additional data through separate queries
+  const posts = data as unknown as CommunityPost[];
 
-  return data as unknown as CommunityPost[];
+  // Get images for each post
+  for (const post of posts) {
+    // Get images
+    const { data: images } = await supabase
+      .from('post_images')
+      .select('*')
+      .eq('post_id', post.id);
+      
+    // Get tags
+    const { data: tags } = await supabase
+      .from('post_tags')
+      .select('*')
+      .eq('post_id', post.id);
+      
+    post.images = images as PostImage[];
+    post.tags = tags as PostTag[];
+  }
+
+  return posts;
 }
 
 // Fetch a single post by ID
@@ -49,9 +85,7 @@ export const getPostById = async (id: string): Promise<CommunityPost | null> => 
     .from('community_posts')
     .select(`
       *,
-      author:profiles(*),
-      images:post_images(*),
-      tags:post_tags(*)
+      profiles!author_id(*)
     `)
     .eq('id', id)
     .single();
@@ -60,8 +94,25 @@ export const getPostById = async (id: string): Promise<CommunityPost | null> => 
     console.error("Error fetching post:", error);
     return null;
   }
+  
+  const post = data as unknown as CommunityPost;
+  
+  // Get images
+  const { data: images } = await supabase
+    .from('post_images')
+    .select('*')
+    .eq('post_id', post.id);
+  
+  // Get tags
+  const { data: tags } = await supabase
+    .from('post_tags')
+    .select('*')
+    .eq('post_id', post.id);
+  
+  post.images = images as PostImage[];
+  post.tags = tags as PostTag[];
 
-  return data as unknown as CommunityPost;
+  return post;
 }
 
 // Get user profile by ID
