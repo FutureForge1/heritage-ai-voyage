@@ -33,7 +33,8 @@ const QuizPage = () => {
     handleAnswer,
     nextQuestion,
     restartQuiz,
-    shareResult
+    shareResult,
+    allQuestions
   } = useQuiz({ questions });
 
   const renderQuizContent = () => {
@@ -85,6 +86,7 @@ const QuizPage = () => {
       return (
         <ActiveQuiz
           currentQuestion={currentQuestion}
+          allQuestions={filteredQuestions}
           currentQuestionIndex={currentQuestionIndex}
           timeLeft={timeLeft}
           score={score}
