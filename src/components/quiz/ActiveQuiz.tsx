@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Award, Clock } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
@@ -6,20 +5,21 @@ import { QuizQuestion, QuizMode } from "@/types/quiz";
 
 export interface ActiveQuizProps {
   currentQuestion: QuizQuestion;
+  allQuestions: QuizQuestion[]; // Added the missing property
   currentQuestionIndex: number;
   timeLeft: number;
   score: number;
   streakCount: number;
   isAnswered: boolean;
-  selectedOption: number | null;
+  selectedOption: number;
   quizMode: QuizMode;
-  allQuestions: QuizQuestion[]; // Add this missing property
   onAnswer: (optionIndex: number) => void;
   onNext: () => void;
 }
 
 const ActiveQuiz = ({
   currentQuestion,
+  allQuestions,
   currentQuestionIndex,
   timeLeft,
   score,
@@ -27,7 +27,6 @@ const ActiveQuiz = ({
   isAnswered,
   selectedOption,
   quizMode,
-  allQuestions,
   onAnswer,
   onNext,
 }: ActiveQuizProps) => {
